@@ -13,6 +13,7 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.DefaultWebSessionStorageEvaluator;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -25,6 +26,7 @@ import javax.servlet.Filter;
 import java.util.*;
 
 @Configuration
+@MapperScan("com.example.ezkeeper.mappers")
 public class ShiroConfig {
 
     private String algorithmName = "MD5";

@@ -51,7 +51,7 @@ public class UsersController {
         if(!usersService.register(users, pw)) return JSONResult.failMsg("注册失败,请稍后重试");
 
         //返回信息和Token
-        return JSONResult.success(usersService.getToken(users,pw),"注册成功");
+        return JSONResult.success(usersService.getToken(users),"注册成功");
     }
 
     /**
@@ -82,7 +82,7 @@ public class UsersController {
 
         //返回Token
         user.setId(usersService.lambdaQuery().eq(Users::getUserName,userName).one().getId());
-        return JSONResult.success(usersService.getToken(user,pw),"登陆成功");
+        return JSONResult.success(usersService.getToken(user),"登陆成功");
     }
 
     /**

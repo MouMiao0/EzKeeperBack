@@ -63,10 +63,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
     @Override
-    public String getToken(Users user, String pw) {
-        if(userTokenService.lambdaQuery()
-                .eq(UserToken::getUserId,user.getId())
-                .one() == null){
+    public String getToken(Users user) {
+        Users theUser = lambdaQuery().eq(Users::getUserName,user.getUserName()).one();
+        if(theUser == null ){
             return null;
         }
         Map<String, String> tokenInfo = new LinkedHashMap<>();

@@ -9,13 +9,18 @@
         <result column="pw" property="pw" />
     </resultMap>
 
-    <resultMap id="TokenResultMap" extends="BaseResultMap" type="com.example.ezkeeper.model.UserToken">
-        <association property="user" resultMap="com.example.ezkeeper.mappers.UsersMapper.BaseResultMap" javaType="com.example.ezkeeper.model.Users" columnPrefix="users_"/>
+    <resultMap id="TokenResultMap" type="com.example.ezkeeper.model.UserToken" extends="BaseResultMap">
+        <association property="user"  column="user_id" javaType="com.example.ezkeeper.model.Users" >
+            <id column="id" property="id"/>
+            <result column="user_name" property="userName" />
+            <result column="emil" property="emil" />
+            <result column="phone" property="phone" />
+            <result column="create_time" property="createTime" />
+        </association>
     </resultMap>
 
-    <select id="getTokenByName" resultType="com.example.ezkeeper.model.UserToken" resultMap="TokenResultMap">
-        select t.*,
-               u.id users_id, u.user_name users_user_name, u.emil users_emil, u.phone users_phone, u.create_time users_create_time
+    <select id="getTokenByName" resultMap="TokenResultMap" parameterType="String">
+        select t.id tid, t.user_id, t.pw ,u.*
         from user_token as t
         join users as u
         on t.user_id = u.id

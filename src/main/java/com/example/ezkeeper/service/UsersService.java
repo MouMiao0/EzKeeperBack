@@ -23,11 +23,11 @@ public interface UsersService extends IService<Users> {
     Boolean register(Users user, String pw);
 
     /**
-     * 用户密码登陆
+     * 用户密码登陆后获取token
      * @param user
      * @return
      */
-    String getToken(Users user, String pw);
+    String getToken(Users user);
 
     /**
      * 手机验证码登陆

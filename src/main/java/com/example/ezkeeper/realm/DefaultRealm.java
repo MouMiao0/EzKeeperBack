@@ -41,21 +41,14 @@ public class DefaultRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
 
-        Users user = usersService.lambdaQuery()
-                .eq(Users::getUserName,usernamePasswordToken.getUsername())
-                .one();
-        UserToken userToken = userTokenService.lambdaQuery()
-                .eq(UserToken::getUserId,user.getId())
-                .one();
-
-        //用户名密码登陆
-//        UserToken userToken = userTokenMapper.getTokenByName(usernamePasswordToken.getUsername());
+//        用户名密码登陆
+        UserToken userToken = userTokenMapper.getTokenByName(usernamePasswordToken.getUsername());
 
         if(userToken == null) return null;
 
         ByteSource salt = ByteSource.Util.bytes(userToken.getUserId().toString());
         return new SimpleAuthenticationInfo(
-                user.getUserName(),
+                userToken.getUser().getUserName(),
                 userToken.getPw(),
                 salt,
                 "DefaultRealm");
