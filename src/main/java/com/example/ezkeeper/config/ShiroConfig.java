@@ -26,7 +26,6 @@ import javax.servlet.Filter;
 import java.util.*;
 
 @Configuration
-@MapperScan("com.example.ezkeeper.mappers")
 public class ShiroConfig {
 
     private String algorithmName = "MD5";

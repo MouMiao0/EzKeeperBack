@@ -143,8 +143,25 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/mapperXml/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.yml</include>
                 </includes>
                 <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/mapperXml/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.yml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>lib</directory>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
             </resource>
         </resources>
     </build>
