@@ -13,4 +13,34 @@
         <result column="note" property="note" />
     </resultMap>
 
+    <resultMap id="BillResultMap" type="com.example.ezkeeper.model.Bill" extends="BaseResultMap">
+        <association property="category" javaType="com.example.ezkeeper.model.BillCategory">
+            <id column="cid" property="id" />
+            <result column="name" property="name" />
+            <result column="incomed" property="incomed" />
+        </association>
+    </resultMap>
+
+    <select id="getPageByUserId" resultType="com.example.ezkeeper.model.Bill" resultMap="BillResultMap" parameterType="Integer">
+        select b.*,
+               case when b.user_custom = 0 then bc.id else c.id end as cid,
+               case when b.user_custom = 0 then bc.name else c.name end as name,
+               case when b.user_custom = 0 then bc.incomed else c.incomed end as incomed
+        from bill as b
+                 join bill_category as bc on b.category_id = bc.id
+                 join custom_bill_category as c on b.category_id = c.id
+        where b.user_id = #{userId}
+    </select>
+
+    <select id="getAllByUserId" resultType="com.example.ezkeeper.model.Bill" resultMap="BillResultMap" parameterType="Integer">
+        select b.*,
+               case when b.user_custom = 0 then bc.id else c.id end as cid,
+               case when b.user_custom = 0 then bc.name else c.name end as name,
+               case when b.user_custom = 0 then bc.incomed else c.incomed end as incomed
+        from bill as b
+                 join bill_category as bc on b.category_id = bc.id
+                 join custom_bill_category as c on b.category_id = c.id
+        where b.user_id = #{userId}
+    </select>
+
 </mapper>

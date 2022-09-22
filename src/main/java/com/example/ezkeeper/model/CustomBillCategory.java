@@ -17,32 +17,14 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CustomBillCategory implements Serializable {
+public class CustomBillCategory extends BillCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 账单分类Id
-     */
-      @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
 
     /**
      * 用户id
      */
     private Integer userId;
-
-    /**
-     * 分类名称
-
-     */
-    private String name;
-
-    /**
-     * 是否为收入
-
-     */
-    private Boolean incomed;
 
 
 }

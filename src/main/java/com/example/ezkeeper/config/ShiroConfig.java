@@ -43,6 +43,7 @@ public class ShiroConfig {
 
 
         Map<String, String> urlFilterMap = new LinkedHashMap<>();
+        urlFilterMap.put("/bill_category","anon");
         urlFilterMap.put("/users/register","anon");
         urlFilterMap.put("/users/login","anon");
         urlFilterMap.put("/users/login_by_phone","anon");

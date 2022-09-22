@@ -1,9 +1,16 @@
 package com.example.ezkeeper.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.ezkeeper.JSONResult;
+import com.example.ezkeeper.Util.JWTUtil;
+import com.example.ezkeeper.model.BillCategory;
+import com.example.ezkeeper.model.CustomBillCategory;
+import com.example.ezkeeper.service.CustomBillCategoryService;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * <p>
@@ -15,8 +22,36 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-09-17
  */
 @RestController
-@RequestMapping("/customBillCategory")
+@RequestMapping("/custom_bill_category")
 public class CustomBillCategoryController {
+
+    @Autowired
+    CustomBillCategoryService customBillCategoryService;
+
+    @RequestMapping("")
+    public JSONResult getCategory(@RequestParam(value = "id", defaultValue = "-1") int id){
+        if(id != -1) return  JSONResult.success(customBillCategoryService.getById(id));
+        List<CustomBillCategory> customBillCategoryList = customBillCategoryService.lambdaQuery()
+                .eq(CustomBillCategory::getUserId,JWTUtil.getUserIdBySubject())
+                .list();
+        return JSONResult.success(customBillCategoryList);
+    }
+
+    @PostMapping("/save_or_update")
+    public JSONResult saveOrUpdateCategory(BillCategory billCategory){
+        CustomBillCategory customBillCategory = (CustomBillCategory) billCategory;
+        customBillCategory.setUserId(JWTUtil.getUserIdBySubject());
+        if(customBillCategoryService.saveOrUpdate(customBillCategory)) return JSONResult.success(customBillCategory,"保存成功");
+        return JSONResult.failMsg("保存失败,请稍后重试");
+    }
+
+    @DeleteMapping("/del")
+    public JSONResult delCategory(@RequestParam(value = "ids") List<Integer> ids){
+        for (int id : ids) {
+            customBillCategoryService.removeByIds(ids);
+        }
+        return JSONResult.success("删除成功");
+    }
 
 }
 

@@ -5,8 +5,13 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ezkeeper.JSONResult;
+import com.example.ezkeeper.Util.JWTUtil;
 import com.example.ezkeeper.model.Bill;
+import com.example.ezkeeper.model.BillCategory;
+import com.example.ezkeeper.model.CustomBillCategory;
 import com.example.ezkeeper.service.BillService;
+import com.example.ezkeeper.service.CustomBillCategoryService;
+import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,11 +41,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/bill")
 public class BillController {
-    @Value("${bill.pageSize}")
-    Integer pageSize;
 
     @Autowired
     BillService billService;
+
+    @Autowired
+    CustomBillCategoryService customBillCategoryService;
 
     /**
      * 记帐
@@ -53,16 +59,10 @@ public class BillController {
 
         if(bill.getUserCustom()  == null) bill.setUserCustom(false);
 
-        int userId = Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
+        int userId = JWTUtil.getUserIdBySubject();
         bill.setUserId(userId);
 
-        if(billService.save(bill)){
-            //记录成功,返回前10个数据
-            Page<Bill> page = new Page<>(1,pageSize);
-            billService.lambdaQuery().eq(Bill::getUserId, userId).page(page);
-            return JSONResult.success(page,"记录成功");
-        }
-        return JSONResult.failMsg("记录失败请稍后重试");
+        return JSONResult.success(billService.loggingBill(bill),"记录成功");
     }
 
     /**
@@ -72,10 +72,7 @@ public class BillController {
      */
     @RequestMapping("/browse")
     public JSONResult browse(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex){
-        int userId = Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
-        Page<Bill> page = new Page<>(pageIndex,pageSize);
-        billService.lambdaQuery().eq(Bill::getUserId, userId).page(page);
-        return JSONResult.success(page,"当前浏览页面为"+ pageIndex);
+        return JSONResult.success(billService.browseBills(pageIndex));
     }
 
 
@@ -111,7 +108,7 @@ public class BillController {
     @PostMapping("/update")
     public JSONResult update(Bill bill){
         if(bill == null || bill.getId() == null) return JSONResult.failMsg("调用错误");
-        int userId = Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
+        int userId = JWTUtil.getUserIdBySubject();
         if(billService.getById(bill.getId()).getUserId() != userId) return JSONResult.failMsg("只能修改自己的账目");
         if(billService.updateById(bill)) return JSONResult.success(bill,"修改成功");
         return JSONResult.failMsg("出错了,请稍后重试");
@@ -148,11 +145,17 @@ public class BillController {
      * @return
      */
     @PostMapping("upload_backup")
-    public JSONResult uploadBackup(@RequestParam("bills") List<Bill> bills){
-        int userId = Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
+    public JSONResult uploadBackup(@RequestParam(value = "bills") List<Bill> bills,
+                                   @RequestParam(value = "categories")List<BillCategory> categories){
+        int userId = JWTUtil.getUserIdBySubject();
         for (Bill bill: bills) {
             if(bill.getUserId() != userId) continue;
             billService.saveOrUpdate(bill);
+        }
+        for (BillCategory category : categories){
+            CustomBillCategory customBillCategory = (CustomBillCategory) category;
+            customBillCategory.setUserId(userId);
+            customBillCategoryService.saveOrUpdate(customBillCategory);
         }
         return JSONResult.success("信息上传成功");
     }
@@ -163,11 +166,23 @@ public class BillController {
      */
     @PostMapping("download_backup")
     public JSONResult downloadBackup(){
-        int userId = Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
-        return JSONResult.success(billService.lambdaQuery()
-                .eq(Bill::getUserId, userId)
-                .list(),"备份信息下传成功");
+        BackupInfo backupInfo = new BackupInfo();
+        backupInfo.setBills(billService.getBillsByUser());
+        backupInfo.setCustomBillCategories(customBillCategoryService
+                .lambdaQuery()
+                .eq(CustomBillCategory::getUserId,JWTUtil.getUserIdBySubject())
+                .list());
+        return JSONResult.success(backupInfo,"备份信息下传成功");
     }
 
 }
+
+/**
+ * 备份信息
+ */
+@Data
+class BackupInfo{
+    private List<Bill> bills;
+    private List<CustomBillCategory> customBillCategories;
+};
 

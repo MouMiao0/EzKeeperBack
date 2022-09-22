@@ -5,6 +5,7 @@ import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -72,5 +73,8 @@ public class Bill implements Serializable {
     @ExcelProperty(value = "备注", index = 1)
     private String note;
 
+
+    @TableField(exist = false)
+    private BillCategory category;
 
 }

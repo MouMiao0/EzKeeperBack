@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Calendar;
@@ -39,5 +40,13 @@ public class JWTUtil {
     //获取token的信息
     public static DecodedJWT getToken(String token){
         return JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
+    }
+
+    /**
+     * 从令牌获取用户id
+     * @return 用户id
+     */
+    public static int getUserIdBySubject(){
+        return Integer.parseInt(SecurityUtils.getSubject().getPrincipal().toString());
     }
 }
