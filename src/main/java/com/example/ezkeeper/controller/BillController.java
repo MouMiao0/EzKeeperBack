@@ -2,8 +2,6 @@ package com.example.ezkeeper.controller;
 
 
 import com.alibaba.excel.EasyExcel;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ezkeeper.JSONResult;
 import com.example.ezkeeper.Util.JWTUtil;
 import com.example.ezkeeper.model.Bill;
@@ -14,7 +12,6 @@ import com.example.ezkeeper.service.CustomBillCategoryService;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -50,7 +48,7 @@ public class BillController {
 
     /**
      * 记帐
-     * @return
+     * @return 历史前十条信息
      */
     @PostMapping("/logging")
     public JSONResult logging(Bill bill){
@@ -67,8 +65,8 @@ public class BillController {
 
     /**
      * 据页数浏览
-     * @param pageIndex
-     * @return
+     * @param pageIndex 页数索引
+     * @return 当页信息
      */
     @RequestMapping("/browse")
     public JSONResult browse(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex){
@@ -78,8 +76,6 @@ public class BillController {
 
     /**
      * excel导出
-     * @param request
-     * @param response
      */
     @RequestMapping("/export_excel")
     public void typeExport(HttpServletRequest request, HttpServletResponse response){
@@ -89,9 +85,9 @@ public class BillController {
             String userAgent = request.getHeader("User-Agent");
             if(userAgent.contains("MSIE")||userAgent.contains("Trident")){
                 filename = URLEncoder.encode(filename,"UTF-8");            }else {
-                filename = new String(filename.getBytes("UTF-8"),"ISO-8859-1");
+                filename = new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             }
-            response.setContentType("application/json.ms-exce");
+            response.setContentType("application/json.ms-excel");
             response.setCharacterEncoding("utf-8");
             response.addHeader("Content-Disposition","filename = " + filename + ".xlsx");
             EasyExcel.write(response.getOutputStream(),Bill.class).sheet("sheet").doWrite(billService.lambdaQuery().eq(Bill::getUserId,userId).list());
@@ -102,8 +98,8 @@ public class BillController {
 
     /**
      * 修改账目
-     * @param bill
-     * @return
+     * @param bill 账目信息
+     * @return 已修改后的账目
      */
     @PostMapping("/update")
     public JSONResult update(Bill bill){
@@ -116,8 +112,7 @@ public class BillController {
 
     /**
      * 删除
-     * @param ids
-     * @return
+     * @param ids 账目id集合
      */
     @Transactional
     @PostMapping("/del")
@@ -142,7 +137,6 @@ public class BillController {
     /**
      * 备份上传
      * @param bills 账单列表
-     * @return
      */
     @PostMapping("upload_backup")
     public JSONResult uploadBackup(@RequestParam(value = "bills") List<Bill> bills,
@@ -184,5 +178,5 @@ public class BillController {
 class BackupInfo{
     private List<Bill> bills;
     private List<CustomBillCategory> customBillCategories;
-};
+}
 
