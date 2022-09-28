@@ -2,20 +2,18 @@ package com.example.ezkeeper.controller;
 
 
 import com.example.ezkeeper.JSONResult;
+import com.example.ezkeeper.Util.JWTUtil;
 import com.example.ezkeeper.model.UserToken;
 import com.example.ezkeeper.model.Users;
 import com.example.ezkeeper.service.UsersService;
 import com.example.ezkeeper.type.LoginPlatformType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 /**
  * <p>
@@ -87,9 +85,9 @@ public class UsersController {
 
     /**
      * 手机登陆
-     * @param phone
-     * @param code
-     * @return
+     * @param phone 手机
+     * @param code 验证码
+     * @return 是否登陆成功
      */
     @RequestMapping(value = "/login_by_phone",method = RequestMethod.POST)
     public JSONResult loginByPhone(@RequestParam(value = "phone",defaultValue = "-1")int phone,
@@ -119,6 +117,15 @@ public class UsersController {
         String newToken = usersService.getToken(token,LoginPlatformType.values()[type]);
         if(newToken != null) return JSONResult.success(newToken,"登陆成功");
         return null;
+    }
+
+    /**
+     * 获取用户信息
+     * @return 用户信息
+     */
+    @RequestMapping("")
+    public JSONResult userInfo(){
+        return JSONResult.success(usersService.getById(JWTUtil.getUserIdBySubject()));
     }
 
 }
