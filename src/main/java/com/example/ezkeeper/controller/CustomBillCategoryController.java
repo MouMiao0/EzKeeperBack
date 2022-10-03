@@ -39,8 +39,8 @@ public class CustomBillCategoryController {
 
     @PostMapping("/save_or_update")
     public JSONResult saveOrUpdateCategory(BillCategory billCategory){
-        CustomBillCategory customBillCategory = (CustomBillCategory) billCategory;
-        customBillCategory.setUserId(JWTUtil.getUserIdBySubject());
+        if(billCategory.getIncomed() == null) billCategory.setIncomed(false);
+        CustomBillCategory customBillCategory = CustomBillCategory.castToCustomBillCategory(billCategory, JWTUtil.getUserIdBySubject());
         if(customBillCategoryService.saveOrUpdate(customBillCategory)) return JSONResult.success(customBillCategory,"保存成功");
         return JSONResult.failMsg("保存失败,请稍后重试");
     }

@@ -147,8 +147,7 @@ public class BillController {
             billService.saveOrUpdate(bill);
         }
         for (BillCategory category : categories){
-            CustomBillCategory customBillCategory = (CustomBillCategory) category;
-            customBillCategory.setUserId(userId);
+            CustomBillCategory customBillCategory = CustomBillCategory.castToCustomBillCategory(category,userId);
             customBillCategoryService.saveOrUpdate(customBillCategory);
         }
         return JSONResult.success("信息上传成功");

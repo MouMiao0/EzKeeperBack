@@ -41,7 +41,7 @@ public class UsersController {
 
         if(users.getUserName() == null || users.getUserName().length() <= 0) return JSONResult.failMsg("请输入用户名");
 
-        if(usersService.lambdaQuery().eq(Users::getUserName,users.getUserName()).one()!=null) return JSONResult.failMsg("改用户名已被注册");
+        if(usersService.lambdaQuery().eq(Users::getUserName,users.getUserName()).one()!=null) return JSONResult.failMsg("该用户名已被注册");
 
         if(pw.length() <= 0) return JSONResult.failMsg("请输入密码");
 

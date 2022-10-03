@@ -27,8 +27,8 @@
                case when b.user_custom = 0 then bc.name else c.name end as name,
                case when b.user_custom = 0 then bc.incomed else c.incomed end as incomed
         from bill as b
-                 join bill_category as bc on b.category_id = bc.id
-                 join custom_bill_category as c on b.category_id = c.id
+                left join bill_category as bc on b.category_id = bc.id
+                left join custom_bill_category as c on b.category_id = c.id
         where b.user_id = #{userId}
     </select>
 
@@ -38,8 +38,8 @@
                case when b.user_custom = 0 then bc.name else c.name end as name,
                case when b.user_custom = 0 then bc.incomed else c.incomed end as incomed
         from bill as b
-                 join bill_category as bc on b.category_id = bc.id
-                 join custom_bill_category as c on b.category_id = c.id
+                left join bill_category as bc on b.category_id = bc.id
+                left join custom_bill_category as c on b.category_id = c.id
         where b.user_id = #{userId}
     </select>
 
