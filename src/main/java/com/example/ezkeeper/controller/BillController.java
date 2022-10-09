@@ -10,14 +10,11 @@ import com.example.ezkeeper.model.CustomBillCategory;
 import com.example.ezkeeper.service.BillService;
 import com.example.ezkeeper.service.CustomBillCategoryService;
 import lombok.Data;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +22,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -102,8 +100,9 @@ public class BillController {
      * @return 已修改后的账目
      */
     @PostMapping("/update")
-    public JSONResult update(Bill bill){
+    public JSONResult update(Bill bill, @RequestParam(value = "time",defaultValue = "0") String time){
         if(bill == null || bill.getId() == null) return JSONResult.failMsg("调用错误");
+        if(time.equals("0")) ;
         int userId = JWTUtil.getUserIdBySubject();
         if(billService.getById(bill.getId()).getUserId() != userId) return JSONResult.failMsg("只能修改自己的账目");
         if(billService.updateById(bill)) return JSONResult.success(bill,"修改成功");

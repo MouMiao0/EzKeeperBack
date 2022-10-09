@@ -6,6 +6,7 @@ import com.example.ezkeeper.Util.JWTUtil;
 import com.example.ezkeeper.model.BillCategory;
 import com.example.ezkeeper.model.CustomBillCategory;
 import com.example.ezkeeper.service.CustomBillCategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class CustomBillCategoryController {
     }
 
     @DeleteMapping("/del")
-    public JSONResult delCategory(@RequestParam(value = "ids") List<Integer> ids){
+    public JSONResult delCategory(@RequestBody List<Integer> ids){
         for (int id : ids) {
             customBillCategoryService.removeByIds(ids);
         }

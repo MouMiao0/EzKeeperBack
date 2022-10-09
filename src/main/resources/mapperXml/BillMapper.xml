@@ -30,6 +30,7 @@
                 left join bill_category as bc on b.category_id = bc.id
                 left join custom_bill_category as c on b.category_id = c.id
         where b.user_id = #{userId}
+        order by b.time desc
     </select>
 
     <select id="getAllByUserId" resultType="com.example.ezkeeper.model.Bill" resultMap="BillResultMap" parameterType="Integer">
@@ -41,6 +42,7 @@
                 left join bill_category as bc on b.category_id = bc.id
                 left join custom_bill_category as c on b.category_id = c.id
         where b.user_id = #{userId}
+        order by b.time desc
     </select>
 
 </mapper>
