@@ -153,6 +153,7 @@
                 <includes>
                     <include>**/mapperXml/*.xml</include>
                     <include>**/*.properties</include>
+                    <include>**/*.work.*</include>
                     <include>**/*.yml</include>
                 </includes>
                 <filtering>false</filtering>
