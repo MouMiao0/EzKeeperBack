@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -31,13 +32,17 @@ public class JWTUtil {
         return builder.sign(Algorithm.HMAC256(SIGNATURE));
     }
 
-    //验证token
+    /**
+     *  验证token
+     */
     public static Boolean verify(String token){
         JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
         return true;
     }
 
-    //获取token的信息
+    /**
+     *  获取token的信息
+     */
     public static DecodedJWT getToken(String token){
         return JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
     }

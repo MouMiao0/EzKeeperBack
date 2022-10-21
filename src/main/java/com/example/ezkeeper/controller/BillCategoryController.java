@@ -5,6 +5,7 @@ import com.example.ezkeeper.JSONResult;
 import com.example.ezkeeper.model.BillCategory;
 import com.example.ezkeeper.service.BillCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
