@@ -11,8 +11,9 @@ server:
 #执行证书的类型
     key-store-type: PKCS12
 
-# redis
+
 spring:
+  # redis
   redis:
     host: localhost
     database: 0
@@ -23,7 +24,13 @@ spring:
         max-wait: 30000
         max-active: 100
     timeout: 2000
-# 应用名称
+  # RabbitMQ
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  # 应用名称
   application:
     name: EzKeeper
 # 数据库驱动：
