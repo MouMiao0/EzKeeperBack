@@ -15,6 +15,13 @@ import com.example.ezkeeper.type.LoginPlatformType;
 public interface UsersService extends IService<Users> {
 
     /**
+     * 通过用户名查找用户
+     * @param userName 用户名
+     * @return 用户
+     */
+    Users getByUserName(String userName);
+
+    /**
      * 注册
      * @param user 用户信息
      * @param pw 密码

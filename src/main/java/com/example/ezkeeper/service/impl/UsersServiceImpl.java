@@ -1,6 +1,5 @@
 package com.example.ezkeeper.service.impl;
 
-import com.baomidou.mybatisplus.extension.exceptions.ApiException;
 import com.example.ezkeeper.Util.JWTUtil;
 import com.example.ezkeeper.mappers.UserTokenMapper;
 import com.example.ezkeeper.model.UserToken;
@@ -12,12 +11,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.ezkeeper.type.LoginPlatformType;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,6 +27,7 @@ import java.util.Map;
  * @author MouMeo
  * @since 2022-09-17
  */
+@EnableRabbit
 @Service
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService {
 
@@ -42,6 +41,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Autowired(required = false)
     UserTokenMapper userTokenMapper;
+
+    @Override
+    public Users getByUserName(String userName) {
+        return baseMapper.getByUserName(userName);
+    }
 
     @Transactional
     @Override

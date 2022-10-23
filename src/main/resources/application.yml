@@ -1,18 +1,9 @@
 #配置https的端口
 server:
   port: 8080
-##ssl
-#  ssl:
-#    enabled: true
-##配置https的证书
-#    key-store: classpath:ezkeeper.work.pfx
-##证书的密码（在生成证书的时候会指定一个密码）
-#    key-store-password: l1cev98u8snh
-##执行证书的类型
-#    key-store-type: PKCS12
 
-# redis
 spring:
+  # redis
   redis:
     host: localhost
     database: 0
@@ -23,6 +14,12 @@ spring:
         max-wait: 30000
         max-active: 100
     timeout: 2000
+  # RabbitMQ
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 # 应用名称
   application:
     name: EzKeeper

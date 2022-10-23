@@ -3,8 +3,7 @@ package com.example.ezkeeper.mappers;
 import com.example.ezkeeper.cache.MybatisRedisCache;
 import com.example.ezkeeper.model.Users;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 /**
  * <p>
@@ -16,5 +15,9 @@ import org.apache.ibatis.annotations.Param;
  */
 @CacheNamespace(implementation = MybatisRedisCache.class)
 public interface UsersMapper extends BaseMapper<Users> {
+
+    @Select("select * from users where user_name like #{userName}")
+    @ResultMap("BaseResultMap")
+    Users getByUserName(String userName);
 
 }
